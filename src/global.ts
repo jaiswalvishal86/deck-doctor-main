@@ -1,16 +1,16 @@
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
-import { SplitText } from 'gsap/SplitText';
+// import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+// import { SplitText } from 'gsap/SplitText';
+import SplitType from 'split-type';
 
 import { initButtonAnimations } from './components/buttons';
 import { initMenus } from './components/menu';
 import { initSectionBackgrounds } from './components/section-backgrounds';
 import { breakpointMediaQueries } from './utils';
 
-gsap.registerPlugin(DrawSVGPlugin);
-gsap.registerPlugin(SplitText);
+// gsap.registerPlugin(DrawSVGPlugin);
+// gsap.registerPlugin(SplitText);
 
 window.Webflow?.push(() => {
-
   // Other page intro animations
   // Hero intro animation
   const introHero = document.querySelector('[data-animate-intro]') as HTMLElement;
@@ -20,60 +20,74 @@ window.Webflow?.push(() => {
     const media = introHero.querySelector('[data-intro-media]');
     const animateHero = gsap.timeline({ paused: true });
 
-    const splitText = new SplitText(title);
+    const splitText = new SplitType(title);
     gsap.set(splitText.lines, { overflow: 'hidden' });
 
-    animateHero.fromTo(splitText.chars, {
-      y: '110%',
-    }, {
-      y: '0%',
-      duration: 0.85,
-      stagger: 0.015,
-      // delay: 0.01,
-      ease: 'power3.out',
-    }, "start");
+    animateHero.fromTo(
+      splitText.chars,
+      {
+        y: '110%',
+      },
+      {
+        y: '0%',
+        duration: 0.85,
+        stagger: 0.015,
+        // delay: 0.01,
+        ease: 'power3.out',
+      },
+      'start'
+    );
 
-    animateHero.fromTo(title, {
-      opacity: 0,
-    }, { opacity: 1, duration: 1 }, "start+=30%");
+    animateHero.fromTo(
+      title,
+      {
+        opacity: 0,
+      },
+      { opacity: 1, duration: 1 },
+      'start+=30%'
+    );
 
-    animateHero.fromTo(subtitle, {
-      opacity: 0,
-    }, { opacity: 1, duration: 1 }, "start+=30%");
+    animateHero.fromTo(
+      subtitle,
+      {
+        opacity: 0,
+      },
+      { opacity: 1, duration: 1 },
+      'start+=30%'
+    );
 
-
-    animateHero.fromTo(media, {
-      autoAlpha: 0,
-      y: '2rem',
-      scale: 0.95
-    }, {
-      autoAlpha: 1,
-      y: '0%',
-      scale: 1,
-      duration: 1,
-    }, "start+=55%");
+    animateHero.fromTo(
+      media,
+      {
+        autoAlpha: 0,
+        y: '2rem',
+        scale: 0.95,
+      },
+      {
+        autoAlpha: 1,
+        y: '0%',
+        scale: 1,
+        duration: 1,
+      },
+      'start+=55%'
+    );
 
     // Remove opacity on parent so we can animate the children
     gsap.set(introHero, {
-      autoAlpha: 1, onComplete: () => {
+      autoAlpha: 1,
+      onComplete: () => {
         animateHero.play();
-      }
+      },
     });
-
   }
-
-
-
-
 
   initButtonAnimations();
   initMenus();
   initSectionBackgrounds();
 
-
   // Split text animation on anything tagged data-animate-text
   document.querySelectorAll('[data-animate-text]').forEach((el) => {
-    const splitText = new SplitText(el);
+    const splitText = new SplitType(el);
     gsap.set(splitText.lines, { overflow: 'hidden' });
     gsap.fromTo(
       splitText.chars,
@@ -93,11 +107,10 @@ window.Webflow?.push(() => {
         },
         onStart: () => {
           gsap.set(el, { autoAlpha: 1 });
-        }
+        },
       }
     );
   });
-
 
   // Internal links — fade out contents of every section, then navigate to the new page
   document.querySelectorAll('a[href^="/"]').forEach((link) => {
