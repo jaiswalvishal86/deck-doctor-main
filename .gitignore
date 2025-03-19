@@ -1,0 +1,15 @@
+logs
+*.log
+npm-debug.log*
+node_modules/
+typings/
+.npm
+.eslintcache
+.node_repl_history
+*.tgz
+.env
+*.js.map
+.npmrc
+package-lock.json
+pnpm-lock.yaml
+.DS_Store
