@@ -12,7 +12,7 @@ export const SCRIPTS_LOADED_EVENT = 'scriptsLoaded';
 
 const LOCALHOST_BASE = 'http://localhost:3000/';
 // const EXTERNAL_SERVER_LOAD_BASE = 'https://cdn.jsdelivr.net/gh/witholdfriends/deck-docs/dist/';
-const EXTERNAL_SERVER_LOAD_BASE = 'https://deck-doctor-main.vercel.app/dist/';
+const EXTERNAL_SERVER_LOAD_BASE = 'https://cdn.jsdelivr.net/gh/jaiswalvishal86/deck-doctor-main@1.0.0/dist';
 
 const SCRIPT_LOAD_PROMISES: Array<Promise<unknown>> = [];
 

@@ -1,17 +1,17 @@
-import { treatmentAccordions } from 'src/components/treatment-accordions';
-
-import { breakpointMediaQueries } from 'src/utils';
-import { SplitText } from 'gsap/SplitText';
 import { Flip } from 'gsap/Flip';
+// import { SplitText } from 'gsap/SplitText';
+import SplitType from 'split-type';
+import { treatmentAccordions } from 'src/components/treatment-accordions';
+import { breakpointMediaQueries } from 'src/utils';
 
 // TODO — confirm with Paras why I have to register this again to use in home.ts
-gsap.registerPlugin(SplitText);
+// gsap.registerPlugin(SplitText);
 gsap.registerPlugin(Flip);
 
 gsap.defaults({
   ease: 'power3.out',
-  duration: 0.45
-})
+  duration: 0.45,
+});
 
 window.Webflow?.push(() => {
   // treatmentAccordions();
@@ -25,51 +25,75 @@ window.Webflow?.push(() => {
   const heroMedia = hero.querySelector('.home-hero_media')!;
   const animateHero = gsap.timeline({ paused: true });
 
-  const splitText = new SplitText(heroTitle);
+  const splitText = new SplitType(heroTitle);
   gsap.set(splitText.lines, { overflow: 'hidden' });
 
-  animateHero.fromTo(splitText.chars, {
-    y: '110%',
-  }, {
-    y: '0%',
-    duration: 0.85,
-    stagger: 0.015,
-    // delay: 0.01,
-    ease: 'power3.out',
-  }, "start");
+  animateHero.fromTo(
+    splitText.chars,
+    {
+      y: '110%',
+    },
+    {
+      y: '0%',
+      duration: 0.85,
+      stagger: 0.015,
+      // delay: 0.01,
+      ease: 'power3.out',
+    },
+    'start'
+  );
 
-  animateHero.fromTo(heroSubtitle, {
-    opacity: 0,
-  }, { opacity: 1, duration: 1 }, "start+=30%");
+  animateHero.fromTo(
+    heroSubtitle,
+    {
+      opacity: 0,
+    },
+    { opacity: 1, duration: 1 },
+    'start+=30%'
+  );
 
-  animateHero.fromTo(heroMedia, {
-    opacity: 0,
-    // opacity: 0.5,
-    y: '2rem',
-    scale: 0.95
-  }, {
-    // opacity: 1,
-    opacity: 1,
-    y: '0%',
-    scale: 1,
-    duration: 1,
-  }, "start+=55%");
+  animateHero.fromTo(
+    heroMedia,
+    {
+      opacity: 0,
+      // opacity: 0.5,
+      y: '2rem',
+      scale: 0.95,
+    },
+    {
+      // opacity: 1,
+      opacity: 1,
+      y: '0%',
+      scale: 1,
+      duration: 1,
+    },
+    'start+=55%'
+  );
 
+  animateHero.fromTo(
+    heroScrollComponent,
+    {
+      opacity: 0,
+    },
+    { opacity: 1, duration: 1 },
+    'start+=95%'
+  );
 
-  animateHero.fromTo(heroScrollComponent, {
-    opacity: 0,
-  }, { opacity: 1, duration: 1 }, "start+=95%");
-
-  animateHero.to('.home_nav', {
-    autoAlpha: 1,
-    duration: 1
-  }, "start+=99%");
+  animateHero.to(
+    '.home_nav',
+    {
+      autoAlpha: 1,
+      duration: 1,
+    },
+    'start+=99%'
+  );
 
   // Remove opacity on parent so we can animate the children
   gsap.set(hero, {
-    autoAlpha: 1, onComplete: () => {
+    autoAlpha: 1,
+    onComplete: () => {
       animateHero.play();
-    }
+    },
   });
 
   // Door — play when in view
@@ -83,7 +107,7 @@ window.Webflow?.push(() => {
       console.warn(`Video failed to play when door entered view. Falling back to play button...`);
       doorPlayButton.style.opacity = '1';
     }
-  }
+  };
 
   const doorPlayButton = document.querySelector(`.door_wrapper .button.is-play`) as HTMLElement;
   doorPlayButton.addEventListener('click', async () => {
@@ -99,12 +123,10 @@ window.Webflow?.push(() => {
       start: 'top bottom',
       end: 'bottom top',
       onLeave: () => {
-
         doorVideo.pause();
         doorVideo.currentTime = 0;
       },
       onLeaveBack: () => {
-
         doorVideo.pause();
         doorVideo.currentTime = 0;
       },
@@ -113,10 +135,9 @@ window.Webflow?.push(() => {
       },
       onEnterBack: async () => {
         await playDoorVideo();
-      }
+      },
     },
   });
-
 
   // Treatment expandables
 
@@ -127,7 +148,6 @@ window.Webflow?.push(() => {
   // Variables that are impacted by resizing
   let initialTreatmentHeights: number[], initialDetailsHeights: number[];
   function setInitialStates() {
-
     // Store whether it's already open or not so we can restore it — we can tell by whether height is already auto
     // TBD this doesn't work
     // const openStates = treatments.map((treatment) => treatment.clientHeight === treatment.scrollHeight);
@@ -139,7 +159,6 @@ window.Webflow?.push(() => {
       treatment.style.aspectRatio = initialTreatmentAspectRatios[i];
     });
 
-
     initialTreatmentHeights = treatments.map((treatment) => treatment.clientHeight);
     initialDetailsHeights = details.map((details) => details.clientHeight);
 
@@ -148,7 +167,6 @@ window.Webflow?.push(() => {
       treatment.style.boxSizing = 'content-box';
       treatment.style.aspectRatio = 'auto';
       treatment.style.height = `${initialTreatmentHeights[i]}px`;
-
     });
   }
 
@@ -158,10 +176,9 @@ window.Webflow?.push(() => {
       setInitialStates();
     }
     prevWidth = window.innerWidth;
-  }
+  };
 
   setInitialStates();
-
 
   // Initially, prevent pointer events on the sublists
   gsap.set('.treatments_wrapper', { pointerEvents: 'none' });
@@ -194,7 +211,6 @@ window.Webflow?.push(() => {
       });
     });
 
-
     treatment.addEventListener('click', () => {
       const initialHeight = initialTreatmentHeights[i];
       const isOpening = treatment.clientHeight === initialHeight;
@@ -207,13 +223,13 @@ window.Webflow?.push(() => {
         ease: 'power2.out',
         onComplete: () => {
           ScrollTrigger.refresh();
-        }
-      })
+        },
+      });
 
       // Toggle scrim and handle visibility
       gsap.to([scrim, handle], {
         opacity: isOpening ? 0 : 1,
-        duration
+        duration,
       });
 
       // If opening, enable pointer events halfway through
@@ -235,22 +251,21 @@ window.Webflow?.push(() => {
           details.open = false;
         });
       }
-
     });
-
   });
 
   details.forEach((details, i) => {
     details.addEventListener('click', (e) => {
       e.stopPropagation();
-      setTimeout(() => { ScrollTrigger.refresh() }, 0);
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 0);
     });
   });
 
   // Deckster character animations
   const media = document.querySelector('.home-hero_media') as HTMLElement;
   const video = media.querySelector('video') as HTMLVideoElement;
-
 
   const playbackRate = 4;
   video.playbackRate = playbackRate;
@@ -294,7 +309,6 @@ window.Webflow?.push(() => {
 
         const activeDeck = document.querySelector(`.deck_component[data-slug="${slug}"]`)!;
         const activeCover = document.querySelector(`img[data-slug="${slug}"]`)!;
-
 
         // Show the active cover and set full opacity to its title
         gsap.to(activeDeck, { duration: 0.3, opacity: 1, ...additionalTweenVars });
@@ -342,7 +356,6 @@ window.Webflow?.push(() => {
       const deckComponents = document.querySelectorAll('.deck_component');
       const arrowInitialState = { autoAlpha: 0, y: '0.125rem', x: '-0.125rem' };
 
-
       deckComponents.forEach((deck) => {
         // Use slug to match titles to their corresponding covers
         const slug = deck.getAttribute('data-slug')!;
@@ -352,7 +365,9 @@ window.Webflow?.push(() => {
         let timeout: number;
 
         const coverWrapper = cover.parentElement!;
-        const slides = document.querySelector(`.track_slides[data-slug="${slug}"]`)!.querySelectorAll('.track_cover-image');
+        const slides = document
+          .querySelector(`.track_slides[data-slug="${slug}"]`)!
+          .querySelectorAll('.track_cover-image');
 
         const slideTransitionDuration = 0.2;
         const slideDuration = 1;
@@ -367,51 +382,65 @@ window.Webflow?.push(() => {
 
         if (slides.length > 0) {
           // Fade-out the cover, using the wrapper to avoid conflicts
-          playSlides.to(coverWrapper, { autoAlpha: 0, duration: slideTransitionDuration, ease: 'linear' }, `>${slideDuration}`);
+          playSlides.to(
+            coverWrapper,
+            { autoAlpha: 0, duration: slideTransitionDuration, ease: 'linear' },
+            `>${slideDuration}`
+          );
           // Cycle through the slides. cross-fade
           slides.forEach((slide) => {
             // Fade in
-            playSlides.to(slide, { autoAlpha: 1, duration: slideTransitionDuration, ease: 'linear' }, "<");
+            playSlides.to(slide, { autoAlpha: 1, duration: slideTransitionDuration, ease: 'linear' }, '<');
             // Fade out
-            playSlides.to(slide, { autoAlpha: 0, duration: slideTransitionDuration, ease: 'linear' }, `>${slideDuration}`);
+            playSlides.to(
+              slide,
+              { autoAlpha: 0, duration: slideTransitionDuration, ease: 'linear' },
+              `>${slideDuration}`
+            );
           });
 
-
-          playSlides.to(coverWrapper, { autoAlpha: 1, duration: slideTransitionDuration, ease: 'linear' }, "<");
+          playSlides.to(coverWrapper, { autoAlpha: 1, duration: slideTransitionDuration, ease: 'linear' }, '<');
         }
 
         // slides.forEach((slide, index) => {
         //   playSlides.fromTo(slide, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8, ease: "none", repeat: 1, yoyo: true, repeatDelay: cycleDuration }, "-=" + 0.8)
         // })
 
-
-        context.add('mouseEnter', () => {
-          // Show the active cover
-          toggleActiveDeck(slug);
-          // Show the arrow indicating external link
-          gsap.to(arrow, { autoAlpha: 1, y: 0, x: 0, duration: 0.3 });
-          // Once they've hovered for more than 500ms, if there are other slides, cycle through them
-          if (slides.length > 0) {
-            timeout = window.setTimeout(() => {
-              playSlides.play();
-            }, slideDuration);
-          }
-        }, deck);
+        context.add(
+          'mouseEnter',
+          () => {
+            // Show the active cover
+            toggleActiveDeck(slug);
+            // Show the arrow indicating external link
+            gsap.to(arrow, { autoAlpha: 1, y: 0, x: 0, duration: 0.3 });
+            // Once they've hovered for more than 500ms, if there are other slides, cycle through them
+            if (slides.length > 0) {
+              timeout = window.setTimeout(() => {
+                playSlides.play();
+              }, slideDuration);
+            }
+          },
+          deck
+        );
 
         deck.addEventListener('mouseenter', context.mouseEnter);
 
-        context.add('mouseLeave', () => {
-          // Stop the cycling
-          clearTimeout(timeout);
-          playSlides.pause();
-          playSlides.progress(0);
-          // Hide the arrow
-          gsap.to(arrow, { ...arrowInitialState, duration: 0.2, overwrite: true });
-          // Reset the cover
-          gsap.to(cover, { ...coverInitialState, duration: 0.1 });
+        context.add(
+          'mouseLeave',
+          () => {
+            // Stop the cycling
+            clearTimeout(timeout);
+            playSlides.pause();
+            playSlides.progress(0);
+            // Hide the arrow
+            gsap.to(arrow, { ...arrowInitialState, duration: 0.2, overwrite: true });
+            // Reset the cover
+            gsap.to(cover, { ...coverInitialState, duration: 0.1 });
 
-          setActiveDeckBasedOnProgress();
-        }, deck);
+            setActiveDeckBasedOnProgress();
+          },
+          deck
+        );
 
         deck.addEventListener('mouseleave', context.mouseLeave);
       });
@@ -421,7 +450,7 @@ window.Webflow?.push(() => {
           deck.removeEventListener('mouseenter', context.mouseEnter);
           deck.removeEventListener('mouseleave', context.mouseLeave);
         });
-      }
+      };
     } else {
       // Manually restore all decks to full opacity, normal scale and y position
       // I didn't think we should have to do this, it should reset all tweens when the media query changes
@@ -429,8 +458,7 @@ window.Webflow?.push(() => {
       gsap.set('.deck_component', { opacity: 1, overwrite: true });
       gsap.set('img[data-slug]', { opacity: 1, scale: 1, y: '0rem', overwrite: true });
     }
-  })
-
+  });
 
   // NOTES — Parallax and rotation while scrolling in view
 
@@ -452,7 +480,6 @@ window.Webflow?.push(() => {
             },
           });
 
-
           // const rotate = [gsap.utils.random(-12, -5), gsap.utils.random(5, 12)][];
           // Notes on the left should start with a negative rotation, notes on the right should start with a positive rotation
           // If there are three notes, the middle one can be randomized left or right
@@ -473,7 +500,7 @@ window.Webflow?.push(() => {
             },
             {
               y: `${gsap.utils.random(-10, -2.5)}rem`,
-              rotate: `${rotate / 4 * -1}deg`,
+              rotate: `${(rotate / 4) * -1}deg`,
             }
           );
         });
@@ -483,7 +510,7 @@ window.Webflow?.push(() => {
       // The notes stack on top of eachother as you scroll, but have to ensure that there's enough room to show the bottom one
 
       // This timeline simply pins the note to the top of the screen for the duration of the section
-      const notes = Array.from(document.querySelectorAll('.notes_item')).filter(note => note.clientHeight > 0);
+      const notes = Array.from(document.querySelectorAll('.notes_item')).filter((note) => note.clientHeight > 0);
 
       const noteWithMaxHeight = Array.from(notes).reduce((prev, current) => {
         return prev.clientHeight > current.clientHeight ? prev : current;
@@ -495,7 +522,6 @@ window.Webflow?.push(() => {
       const topForMaxNote = (window.innerHeight - totalHeightOfMaxNote) / 2;
 
       notes.forEach((note, index) => {
-
         // Animate the inner note so it doesn't conflict with the pin
         const noteComponent = note.querySelector('.note_component')!;
 
@@ -507,23 +533,25 @@ window.Webflow?.push(() => {
             end: `top top`,
             // pin: true,
             markers: window.IS_DEBUG_MODE,
-            scrub: 1
+            scrub: 1,
           },
         });
-
 
         // Every other — slightly left with a positive rotation to negative, slightly right with a negative rotation to positive
         const rotate = index % 2 === 0 ? gsap.utils.random(5, 12) : gsap.utils.random(-12, -5);
         const x = index % 2 === 0 ? gsap.utils.random(-2, -1) : gsap.utils.random(1, 2);
 
-        notesTimeline.fromTo(noteComponent, {
-          rotate: `${rotate}deg`,
-          x: `${x}rem`,
-
-        }, {
-          rotate: `${rotate / 4 * -1}deg`,
-          x: `${x / 2}rem`,
-        });
+        notesTimeline.fromTo(
+          noteComponent,
+          {
+            rotate: `${rotate}deg`,
+            x: `${x}rem`,
+          },
+          {
+            rotate: `${(rotate / 4) * -1}deg`,
+            x: `${x / 2}rem`,
+          }
+        );
 
         // Pin notes at top
         gsap.timeline({
@@ -539,11 +567,10 @@ window.Webflow?.push(() => {
             pin: true,
             markers: window.IS_DEBUG_MODE,
           },
-        })
+        });
       });
     }
   });
-
 
   // Flip the badge across the z-axis when it scrolls into view
   const badge = document.querySelector('.notes_badge')!;
@@ -570,22 +597,26 @@ window.Webflow?.push(() => {
 
   // Use a similar split text animation on this section title but different toggleActions because of the stickiness
   document.querySelectorAll('.section_notes h2').forEach((el, index) => {
-    const splitText = new SplitText(el);
+    const splitText = new SplitType(el);
     gsap.set(splitText.lines, { overflow: 'hidden' });
-    gsap.fromTo(splitText.chars, {
-      y: '100%',
-    }, {
-      y: '0%',
-      duration: 0.8,
-      stagger: 0.01,
-      delay: index * 0.1,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.section_notes',
-        start: 'top bottom-=10%',
-        // Repeat the animation if the section is scrolled out of view and back in
-        toggleActions: 'play reset play reset',
+    gsap.fromTo(
+      splitText.chars,
+      {
+        y: '100%',
+      },
+      {
+        y: '0%',
+        duration: 0.8,
+        stagger: 0.01,
+        delay: index * 0.1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.section_notes',
+          start: 'top bottom-=10%',
+          // Repeat the animation if the section is scrolled out of view and back in
+          toggleActions: 'play reset play reset',
+        },
       }
-    });
+    );
   });
 });
