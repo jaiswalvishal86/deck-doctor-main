@@ -17,7 +17,7 @@
     "lint": "eslint --ignore-path .gitignore ./src && prettier --check ./src",
     "check": "tsc --noEmit",
     "format": "prettier --write ./src",
-    "vercel-build": "mkdir -p public/dist && cp -r dist/* public/dist/"
+    "vercel-build": "NODE_ENV=production node bin/build.js"
   },
   "devDependencies": {
     "@changesets/changelog-git": "^0.1.14",
